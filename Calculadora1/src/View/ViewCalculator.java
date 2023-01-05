@@ -4,23 +4,42 @@
  */
 package View;
 
+import Controller.ControllerCalculadora;
+import Controller.Conversor;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author multi
  */
-public class ViewCalcluadora extends javax.swing.JFrame {
+public class ViewCalculator extends javax.swing.JFrame {
 
     /**
-     * Creates new form ViewCalcluadora
+     * Creates new form ViewCalculator
      */
-    double answer;
-    double result;
-    public ViewCalcluadora() {
+    //Variables
+    private double answer;
+    private double result;
+    private double numberOne;
+    private double numberTwo;
+    private char operation;
+    private boolean signal = false;
+    private Conversor conversor;
+    private ControllerCalculadora calControl;
+    private String answerFile;
+    
+
+    public ViewCalculator() throws IOException {
         initComponents();
         this.setIconImage(new ImageIcon("src/Imagens/Icon Calculadora.png").getImage());
-
+        conversor = new Conversor();
+        calControl = new ControllerCalculadora();
+        answerFile= "answerFile.dat";
+        answer=calControl.loadAnswerData(answerFile);
     }
 
     /**
@@ -119,6 +138,11 @@ public class ViewCalcluadora extends javax.swing.JFrame {
         buttonSplit.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         buttonSplit.setForeground(new java.awt.Color(255, 255, 255));
         buttonSplit.setText("÷");
+        buttonSplit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSplitActionPerformed(evt);
+            }
+        });
 
         buttonC.setBackground(new java.awt.Color(255, 51, 51));
         buttonC.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -165,21 +189,41 @@ public class ViewCalcluadora extends javax.swing.JFrame {
         buttonFatorial.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         buttonFatorial.setForeground(new java.awt.Color(255, 255, 255));
         buttonFatorial.setText("x!");
+        buttonFatorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonFatorialActionPerformed(evt);
+            }
+        });
 
         buttonExp.setBackground(new java.awt.Color(0, 0, 0));
         buttonExp.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         buttonExp.setForeground(new java.awt.Color(255, 255, 255));
         buttonExp.setText("x^2");
+        buttonExp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExpActionPerformed(evt);
+            }
+        });
 
         buttonRoot.setBackground(new java.awt.Color(0, 0, 0));
         buttonRoot.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         buttonRoot.setForeground(new java.awt.Color(255, 255, 255));
         buttonRoot.setText("√x");
+        buttonRoot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRootActionPerformed(evt);
+            }
+        });
 
         buttonMulti.setBackground(new java.awt.Color(255, 102, 0));
         buttonMulti.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         buttonMulti.setForeground(new java.awt.Color(255, 255, 255));
         buttonMulti.setText("×");
+        buttonMulti.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonMultiActionPerformed(evt);
+            }
+        });
 
         buttonFour.setBackground(new java.awt.Color(0, 0, 0));
         buttonFour.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -295,6 +339,11 @@ public class ViewCalcluadora extends javax.swing.JFrame {
         buttonEqual.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         buttonEqual.setForeground(new java.awt.Color(255, 255, 255));
         buttonEqual.setText("=");
+        buttonEqual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEqualActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelButtonsLayout = new javax.swing.GroupLayout(panelButtons);
         panelButtons.setLayout(panelButtonsLayout);
@@ -425,11 +474,11 @@ public class ViewCalcluadora extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
-        // TODO add your handling code here:
+        Sum();
     }//GEN-LAST:event_buttonAddActionPerformed
 
     private void buttonSubtractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSubtractActionPerformed
-        // TODO add your handling code here:
+        Subtraction();
     }//GEN-LAST:event_buttonSubtractActionPerformed
 
     private void buttonCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCActionPerformed
@@ -442,72 +491,233 @@ public class ViewCalcluadora extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonDELActionPerformed
 
     private void buttonZero1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonZero1ActionPerformed
-       tfScreen.setText(tfScreen.getText()+0);
+        tfScreen.setText(tfScreen.getText() + 0);
     }//GEN-LAST:event_buttonZero1ActionPerformed
 
     private void buttonPointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPointActionPerformed
-             tfScreen.setText(tfScreen.getText()+".");
+        tfScreen.setText(tfScreen.getText() + ".");
     }//GEN-LAST:event_buttonPointActionPerformed
 
     private void buttonAnswerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAnswerActionPerformed
-             tfScreen.setText(tfScreen.getText()+answer);
+        Answer();
     }//GEN-LAST:event_buttonAnswerActionPerformed
 
     private void buttonOneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOneActionPerformed
-             tfScreen.setText(tfScreen.getText()+1);
+        tfScreen.setText(tfScreen.getText() + 1);
     }//GEN-LAST:event_buttonOneActionPerformed
 
     private void buttonTwoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTwoActionPerformed
-           tfScreen.setText(tfScreen.getText()+2);
+        tfScreen.setText(tfScreen.getText() + 2);
     }//GEN-LAST:event_buttonTwoActionPerformed
 
     private void buttonTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTreeActionPerformed
-             tfScreen.setText(tfScreen.getText()+3);
+        tfScreen.setText(tfScreen.getText() + 3);
     }//GEN-LAST:event_buttonTreeActionPerformed
 
     private void buttonFourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFourActionPerformed
-             tfScreen.setText(tfScreen.getText()+4);
+        tfScreen.setText(tfScreen.getText() + 4);
     }//GEN-LAST:event_buttonFourActionPerformed
 
     private void buttonFiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFiveActionPerformed
-             tfScreen.setText(tfScreen.getText()+5);
+        tfScreen.setText(tfScreen.getText() + 5);
     }//GEN-LAST:event_buttonFiveActionPerformed
 
     private void buttonSixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSixActionPerformed
-            tfScreen.setText(tfScreen.getText()+6);
+        tfScreen.setText(tfScreen.getText() + 6);
     }//GEN-LAST:event_buttonSixActionPerformed
 
     private void buttonSevenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSevenActionPerformed
-            tfScreen.setText(tfScreen.getText()+7);
+        tfScreen.setText(tfScreen.getText() + 7);
     }//GEN-LAST:event_buttonSevenActionPerformed
 
     private void buttonEightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEightActionPerformed
-            tfScreen.setText(tfScreen.getText()+8);
+        tfScreen.setText(tfScreen.getText() + 8);
     }//GEN-LAST:event_buttonEightActionPerformed
 
     private void buttonNine1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNine1ActionPerformed
-            tfScreen.setText(tfScreen.getText()+9);
+        tfScreen.setText(tfScreen.getText() + 9);
     }//GEN-LAST:event_buttonNine1ActionPerformed
 
+    private void buttonMultiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMultiActionPerformed
+        Multiplication();
+    }//GEN-LAST:event_buttonMultiActionPerformed
+
+    private void buttonSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSplitActionPerformed
+        Division();
+    }//GEN-LAST:event_buttonSplitActionPerformed
+
+    private void buttonEqualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEqualActionPerformed
+        try {
+            Equals();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error "+ ex);
+        }
+    }//GEN-LAST:event_buttonEqualActionPerformed
+
+    private void buttonRootActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRootActionPerformed
+        squareRoot();
+    }//GEN-LAST:event_buttonRootActionPerformed
+
+    private void buttonExpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExpActionPerformed
+        Exponent();
+    }//GEN-LAST:event_buttonExpActionPerformed
+
+    private void buttonFatorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFatorialActionPerformed
+        Fatorial();
+    }//GEN-LAST:event_buttonFatorialActionPerformed
+
+    //Math Operation
+    private void Sum() {
+        String text = tfScreen.getText();
+        if (verificarExistenciaSinal(text)) {
+            takeNumeberOne(text);
+        }
+        tfScreen.setText(verifySignal(text) + "+");
+        operation = '+';
+        signal = true;
+
+    }
+
+    private void Subtraction() {
+        String text = tfScreen.getText();
+        if (verificarExistenciaSinal(text)) {
+            takeNumeberOne(text);
+        }
+        tfScreen.setText(verifySignal(text) + "-");
+        operation = '-';
+        signal = true;
+    }
+
+    private void Multiplication() {
+        String text = tfScreen.getText();
+        if (verificarExistenciaSinal(text)) {
+            takeNumeberOne(text);
+        }
+
+        tfScreen.setText(verifySignal(text) + "*");
+        operation = '*';
+        signal = true;
+
+    }
+
+    private void Division() {
+        String text = tfScreen.getText();
+        if (verificarExistenciaSinal(text)) {
+            takeNumeberOne(text);
+        }
+        tfScreen.setText(verifySignal(text) + "÷");
+        operation = '÷';
+        signal = true;
+    }
+
+    private void Fatorial() {
+        if (signal == false) {
+            numberOne = calControl.Fatorial(conversor.StringToDouble(tfScreen.getText()));
+            tfScreen.setText(numberOne + "");
+        } else {
+            double number = calControl.numberTwo(tfScreen.getText());
+            numberTwo = calControl.Fatorial(number);
+            String text = tfScreen.getText();
+            text = text.substring(0, text.length() - 1);
+            tfScreen.setText(text + numberTwo);
+        }
+
+    }
+
+    private void Exponent() {
+        if (signal == false) {
+            double number = conversor.StringToDouble(tfScreen.getText());
+            numberOne = calControl.Square(number);
+            tfScreen.setText(numberOne + "");
+        } else {
+            double number = calControl.numberTwo(tfScreen.getText());
+            numberTwo = calControl.squireRoot(number);
+            String text = tfScreen.getText();
+            text = text.substring(0, text.length() - 1);
+            tfScreen.setText(text + numberTwo);
+
+        }
+    }
+
+    private void squareRoot() {
+        if (signal == false) {
+            numberOne = calControl.squireRoot(conversor.StringToDouble(tfScreen.getText()));
+            tfScreen.setText(numberOne + "");
+        } else {
+            double number = calControl.numberTwo(tfScreen.getText());
+            numberTwo = calControl.squireRoot(number);
+            String text = tfScreen.getText();
+            text = text.substring(0, text.length() - 1);
+            tfScreen.setText(text + numberTwo);
+        }
+    }
+
+    private void Equals() throws IOException {
+        if (tfScreen.getText().length() > 0 && signal) {
+            numberTwo = calControl.numberTwo(tfScreen.getText());
+            result = calControl.chooseOperation(operation, numberOne, numberTwo);
+            answer=result;
+            calControl.saveAnswerData(answerFile, answer);
+            tfScreen.setText("" + result);
+            signal = false;
+        }
+    }
+    
+    private void Answer(){
+        String text = tfScreen.getText();
+         if (signal == false && text.length()<1) {
+             numberOne=answer;
+            tfScreen.setText(numberOne+ "");
+        } 
+        else {
+            numberTwo =answer;
+            tfScreen.setText(text+numberTwo);
+        }
+    
+    }
+    
+    //Services of Calculator
     private void cleanScreen() {
         tfScreen.setText("");
         requestFoco();
     }
 
     private void deleteCharacter() {
-        if(tfScreen.getText().length()>0){
-        int lenght = tfScreen.getText().length();
-        String message = tfScreen.getText().substring(0, lenght - 1);
-        tfScreen.setText(message);}
+        if (tfScreen.getText().length() > 0) {
+            int lenght = tfScreen.getText().length();
+            String message = tfScreen.getText().substring(0, lenght - 1);
+            tfScreen.setText(message);
+        }
         requestFoco();
     }
 
-    private void requestFoco(){
-     if(tfScreen.getText().length()==0){
-         tfScreen.requestFocus();
+    private void requestFoco() {
+        if (tfScreen.getText().length() == 0) {
+            signal = false;
+            tfScreen.requestFocus();
+
         }
     }
-    
+
+    private void takeNumeberOne(String text) {
+        numberOne = conversor.StringToDouble(text);
+    }
+
+    private boolean verificarExistenciaSinal(String text) {
+        if (text.length() > 0 && signal == false) {
+            return true;
+        }
+        return false;
+    }
+
+    private String verifySignal(String text) {
+        if (signal == true) {
+            return text = text.subSequence(0, text.length() - 1) + "";
+        } else {
+            return text;
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -525,20 +735,25 @@ public class ViewCalcluadora extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewCalcluadora.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewCalculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewCalcluadora.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewCalculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewCalcluadora.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewCalculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewCalcluadora.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewCalculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewCalcluadora().setVisible(true);
+                try {
+                    new ViewCalculator().setVisible(true);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error "+ ex);
+                }
             }
         });
     }
